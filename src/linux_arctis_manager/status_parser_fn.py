@@ -12,12 +12,10 @@ def status_type(name: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
 @status_type("percentage")
 def percentage(perc_min: int, perc_max: int, value: int) -> int:
     if perc_max < perc_min:
-        value = perc_min - value
-        perc_min, perc_max = perc_min, perc_max
-
-        return 100 - (value - perc_min) * 100 // (perc_max - perc_min)
-
-    return (value - perc_min) * 100 // (perc_max - perc_min)
+        result = (perc_min - value) * 100 // (perc_min - perc_max)
+    else:
+        result = (value - perc_min) * 100 // (perc_max - perc_min)
+    return max(0, min(100, result))
 
 @status_type("on_off")
 def on_off(value: int, on: int, off: int) -> Literal['on', 'off']:

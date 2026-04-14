@@ -14,6 +14,14 @@ def test_percentage():
     assert fn(0, 100, 100) == 100
     assert fn(-123, 123, 123) == 100
 
+    # inverted range (perc_max < perc_min)
+    assert fn(255, 191, 255) == 0
+    assert fn(255, 191, 191) == 100
+    assert fn(255, 191, 223) == 50
+    # out-of-range values clamp
+    assert fn(255, 191, 0) == 100
+    assert fn(0, 100, 150) == 100
+
 def test_on_off():
     fn = on_off
     assert getattr(fn, '_status_type') == 'on_off'

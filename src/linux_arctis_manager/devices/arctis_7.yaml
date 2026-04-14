@@ -1,0 +1,41 @@
+device:
+  name: SteelSeries Arctis 7
+  vendor_id: 0x1038
+  product_ids:
+    - 0x1260 # Arctis 7
+    - 0x12ad # Arctis 7 2019
+
+  command_padding:
+    length: 31
+    position: end
+    filler: 0x00
+
+  command_interface_index: [0, 5] # endpoint 0x00, wIndex = interface 5
+  listen_interface_indexes: [5]
+
+  device_init:
+    - ['status.request']
+
+  status:
+    # Request: 0x06 0x24 — response bytes: [2]=game/media mix, [3]=chat mix
+    # Raw values: 191=100% (max vol), 255=0% (min vol), 0=100% (edge case max)
+    request: 0x0624
+    response_mapping:
+      - starts_with: 0x0624
+        media_mix: 0x02
+        chat_mix: 0x03
+
+    representation:
+      headset:
+        - media_mix
+        - chat_mix
+
+  status_parse:
+    media_mix:
+      type: percentage
+      perc_min: 255
+      perc_max: 191
+    chat_mix:
+      type: percentage
+      perc_min: 255
+      perc_max: 191
