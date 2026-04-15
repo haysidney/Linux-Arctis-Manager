@@ -28,3 +28,11 @@ def int_str_mapping(values: dict[int, str], value: int) -> str|None:
 @status_type("int_int_mapping")
 def int_int_mapping(values: dict[int, int], value: int) -> int|None:
     return values.get(value, None)
+
+@status_type("two_sided_chatmix")
+def two_sided_chatmix(active_min: int, active_max: int, value: int) -> int:
+    """For Arctis 7-style chatmix: value=0 means opposite side active (this channel at 100%).
+    Otherwise maps active_min→0% to active_max→100%."""
+    if value == 0:
+        return 100
+    return max(0, min(100, (value - active_min) * 100 // (active_max - active_min)))

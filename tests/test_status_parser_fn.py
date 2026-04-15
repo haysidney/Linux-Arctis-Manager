@@ -1,4 +1,4 @@
-from linux_arctis_manager.status_parser_fn import int_int_mapping, int_str_mapping, on_off, percentage
+from linux_arctis_manager.status_parser_fn import int_int_mapping, int_str_mapping, on_off, percentage, two_sided_chatmix
 
 
 def test_percentage():
@@ -41,6 +41,20 @@ def test_int_str_mapping():
     assert fn(mapping, 0x01) == "-12db"
     assert fn(mapping, 0x02) == "on"
     assert fn(mapping, 0x03) is None
+
+def test_two_sided_chatmix():
+    fn = two_sided_chatmix
+    assert getattr(fn, '_status_type') == 'two_sided_chatmix'
+
+    # value=0 means opposite side active → this channel at 100%
+    assert fn(192, 255, 0) == 100
+    # active range: 192=0%, 255=100%
+    assert fn(192, 255, 192) == 0
+    assert fn(192, 255, 255) == 100
+    # midpoint
+    assert fn(192, 255, 223) == 49
+    # out of range clamps
+    assert fn(192, 255, 100) == 0
 
 def test_int_int_mapping():
     fn = int_int_mapping

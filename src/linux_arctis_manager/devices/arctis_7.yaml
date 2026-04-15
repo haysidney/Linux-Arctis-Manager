@@ -13,8 +13,7 @@ device:
   command_interface_index: [0, 5] # endpoint 0x00, wIndex = interface 5
   listen_interface_indexes: [5]
 
-  device_init:
-    - ['status.request']
+  device_init: []
 
   status:
     # Request: 0x06 0x24 — response bytes: [2]=game/media mix, [3]=chat mix
@@ -22,8 +21,8 @@ device:
     request: 0x0624
     response_mapping:
       - starts_with: 0x0624
-        media_mix: 0x02
-        chat_mix: 0x03
+        chat_mix: 0x02
+        media_mix: 0x03
 
     representation:
       headset:
@@ -31,11 +30,11 @@ device:
         - chat_mix
 
   status_parse:
-    media_mix:
-      type: percentage
-      perc_min: 255
-      perc_max: 191
     chat_mix:
-      type: percentage
-      perc_min: 255
-      perc_max: 191
+      type: two_sided_chatmix
+      active_min: 192
+      active_max: 255
+    media_mix:
+      type: two_sided_chatmix
+      active_min: 192
+      active_max: 255

@@ -26,6 +26,7 @@ class StatusParseType(Enum):
     ON_OFF = 'on_off'
     INT_STR_MAPPING = 'int_str_mapping'
     INT_INT_MAPPING = 'int_int_mapping'
+    TWO_SIDED_CHATMIX = 'two_sided_chatmix'
 
 @dataclass
 class ConfigStatusParser:
