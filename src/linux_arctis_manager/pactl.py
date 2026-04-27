@@ -152,14 +152,24 @@ class PulseAudioManager:
             self.pulse.volume_set_all_chans(chat, chat_mix / 100)
 
     def sinks_setup(self, device_name: str, vendor_id: int, product_id: int|list[int]|None):
-        real_sink = self.get_arctis_sinks(ONLY_PHYSICAL, vendor_id=vendor_id, product_id=product_id)
+        real_sinks = self.get_arctis_sinks(ONLY_PHYSICAL, vendor_id=vendor_id, product_id=product_id)
 
-        if not real_sink:
+        if not real_sinks:
             self.logger.warning('No SteelSeries Arctis sink found.')
             return
-        
-        self.create_virtual_sink(PULSE_MEDIA_NODE_NAME, f'{device_name} Media', real_sink[0].name)
-        self.create_virtual_sink(PULSE_CHAT_NODE_NAME, f'{device_name} Chat', real_sink[0].name)
+
+        # Arctis 7 exposes separate game (stereo) and chat (mono) interfaces.
+        # Route each virtual sink to the matching physical interface.
+        game_sink = next((s for s in real_sinks if 'game' in s.name), None) or \
+                    next((s for s in real_sinks if 'stereo' in s.name), None)
+        chat_sink = next((s for s in real_sinks if 'chat' in s.name), None) or \
+                    next((s for s in real_sinks if 'mono' in s.name), None)
+
+        media_output = (game_sink or real_sinks[0]).name
+        chat_output = (chat_sink or real_sinks[0]).name
+
+        self.create_virtual_sink(PULSE_MEDIA_NODE_NAME, f'{device_name} Media', media_output)
+        self.create_virtual_sink(PULSE_CHAT_NODE_NAME, f'{device_name} Chat', chat_output)
 
     def sinks_teardown(self):
         self.logger.info('Removing virtual sinks...')

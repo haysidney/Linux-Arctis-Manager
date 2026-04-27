@@ -16,13 +16,13 @@ device:
   device_init: []
 
   status:
-    # Request: 0x06 0x24 — response bytes: [2]=game/media mix, [3]=chat mix
-    # Raw values: 191=100% (max vol), 255=0% (min vol), 0=100% (edge case max)
+    # Request: 0x06 0x24 — response bytes: [2]=media/game mix, [3]=chat mix
+    # Raw values: 192=0% (muted), 255=100% (max), 0=fader fully opposite side
     request: 0x0624
     response_mapping:
       - starts_with: 0x0624
-        chat_mix: 0x02
-        media_mix: 0x03
+        media_mix: 0x02
+        chat_mix: 0x03
 
     representation:
       headset:
