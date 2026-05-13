@@ -6,7 +6,7 @@ EAPI=8
 PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_USE_PEP517=hatchling
 
-inherit distutils-r1 git-r3
+inherit distutils-r1 git-r3 systemd
 
 DESCRIPTION="Replacement for SteelSeries GG software to manage Arctis devices on Linux"
 HOMEPAGE="https://github.com/haysidney/Linux-Arctis-Manager"
@@ -26,3 +26,8 @@ RDEPEND="
 	gui? ( dev-python/pyside[${PYTHON_USEDEP}] )
 "
 DEPEND="${RDEPEND}"
+
+src_install() {
+	distutils-r1_src_install
+	systemd_douserunit scripts/arctis-manager.service
+}
