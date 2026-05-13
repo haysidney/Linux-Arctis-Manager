@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <longdescription>
+    Linux Arctis Manager is a replacement for SteelSeries GG software,
+    providing chatmix, EQ, and device management for Arctis headsets on Linux.
+  </longdescription>
+  <use>
+    <flag name="gui">Install the graphical interface (lam-gui)</flag>
+  </use>
+</pkgmetadata>
