@@ -15,6 +15,7 @@ EGIT_BRANCH="feature/arctis-7-support"
 
 LICENSE="GPL-3"
 SLOT="0"
+KEYWORDS="~amd64"
 IUSE="gui"
 
 RDEPEND="
