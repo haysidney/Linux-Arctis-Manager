@@ -37,7 +37,7 @@ class PulseAudioManager:
             try:
                 sinks = self.pulse.sink_list()
                 break
-            except pulsectl.PulseError as e:
+            except Exception as e:
                 self.logger.error(f'Error while getting sink list: {e}')
                 retry_attempts -= 1
                 time.sleep(1)
@@ -174,5 +174,10 @@ class PulseAudioManager:
     def sinks_teardown(self):
         self.logger.info('Removing virtual sinks...')
 
-        self.remove_virtual_sink(PULSE_MEDIA_NODE_NAME)
-        self.remove_virtual_sink(PULSE_CHAT_NODE_NAME)
+        try:
+            self.remove_virtual_sink(PULSE_MEDIA_NODE_NAME)
+            self.remove_virtual_sink(PULSE_CHAT_NODE_NAME)
+        except Exception as e:
+            # PipeWire may already be shutting down; virtual sinks will be
+            # cleaned up by PipeWire itself in that case.
+            self.logger.warning(f'Could not remove virtual sinks during teardown (PipeWire may be shutting down): {e}')
